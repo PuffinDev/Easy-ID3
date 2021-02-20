@@ -15,7 +15,7 @@ Easy ID3 Menu
 -------------------------------------
 Welcome to easy id3! To get started,
 read the instructions in README.md on 
-how to setup your config.ini.
+how to setup your config.ini
 =====================================
 
 Enter the directory containing your audio files
