@@ -3,13 +3,14 @@ from progress.bar import Bar
 import configparser
 import os
 import fnmatch
+from pathlib import Path
 
 
 tags = ['title', 'artist', 'album']
 
 
 directory = input(\
-"""
+'\u001b[34;1m' + """
 =====================================
 Easy ID3 Menu
 -------------------------------------
@@ -17,6 +18,7 @@ Welcome to easy id3! To get started,
 read the instructions in README.md on 
 how to setup your config.ini
 =====================================
+\u001b[0m
 
 Enter the directory containing your audio files
 > """)
@@ -62,18 +64,26 @@ for file in matching_files:
     if len(config['ARTIST']['remove_text']) > 0:
         music.tag.artist = music.tag.artist.replace(config['ARTIST']['remove_text'], '')
     if len(config['ALBUM']['remove_text']) > 0:
-        music.tag.artist = music.tag.artist.replace(config['ALBUM']['remove_text'], '')
+        music.tag.album = music.tag.artist.replace(config['ALBUM']['remove_text'], '')
 
     #change_text_to
     if config['TRACKNAME']['change_text_to']:
-        music.tag.artist = music.tag.title = config['TRACKNAME']['change_text_to']
+        music.tag.title = config['TRACKNAME']['change_text_to']
     if config['ARTIST']['change_text_to']:
         music.tag.artist = config['ARTIST']['change_text_to']
     if config['ALBUM']['change_text_to']:
-        music.tag.artist = config['ALBUM']['change_text_to']
+        music.tag.album = config['ALBUM']['change_text_to']
 
+    print(music.tag.artist)
     music.tag.save()
-    
+
+    path = Path(file)
+
+    if config['FILENAME']['remove_text']:
+        os.rename(file, str(path.parent) + '/' + os.path.basename(file).replace(config['FILENAME']['remove_text'], ''))
+    if config['FILENAME']['change_text_to']:
+        os.rename(file, str(path.parent) + '/' + config['FILENAME']['change_text_to'])
+
     bar.next()
 
 print("\n\nDone!")
